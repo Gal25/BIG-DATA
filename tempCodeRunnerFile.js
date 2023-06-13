@@ -1,0 +1,1 @@
+interval = 60000 / numEvents; /

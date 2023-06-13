@@ -57,18 +57,17 @@ function createMessage() {
   return message;
 }
 
-// Create a new message for Apparent Brightness Rise event
-const apparentBrightnessRiseMessage = createMessage();
-console.log(apparentBrightnessRiseMessage);
-
-// Create a new message for UV Rise event
-const uvRiseMessage = createMessage();
-console.log(uvRiseMessage);
-
-// Create a new message for X-Ray Rise event
-const xRayRiseMessage = createMessage();
-console.log(xRayRiseMessage);
-
-// Create a new message for Comet event
-const cometMessage = createMessage();
-console.log(cometMessage);
+// Generate 5 events per minute indefinitely
+function generateEvents() {
+    const interval = 60 * 1000 / 5; // Interval between each event in milliseconds
+  
+    setInterval(() => {
+      for (let i = 0; i < 5; i++) {
+        const eventMessage = createMessage();
+        console.log(eventMessage);
+      }
+    }, interval);
+  }
+  
+  // Start generating events
+  generateEvents();
