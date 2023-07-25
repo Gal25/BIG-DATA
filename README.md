@@ -15,8 +15,11 @@ The data for the **server** or the **ELT** is pulled through Kafka.
 
 # Dashboard
 • The system displays a list of recent event data within the Dashboard.
+
 • A recent event will be displayed separately with full details about the source and if the urgency level is 4 or higher it is highlighted and there are UX effects to attract the user's attention.
+
 • The system displays the list of bodies that are supposed to pass near the Earth in the next 24 hours from (NEO Earth Close Approaches (nasa.gov)).
+
 • The system displays the solar activity forecast for the next few hours from (https://theskylive.com/).
 
 # Search and locate by ELT:
@@ -27,7 +30,10 @@ There are 3 search options
 
 # Anzalia
 o Distribution of the types of events in the last week (cut by urgency 1-5)
+
 o Graph of the distribution of asteroids that passed near KA in the last month (by size)
+
 o Today's rise, transit and set times of The Sun
+
 o Today Sunspots Activity image
 
