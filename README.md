@@ -8,6 +8,8 @@ The system displays the events in real time or at a daily update level, stores a
 The system displays every astronomical event (contains date and time, telescope, location in RA and DEC units, type of event, level of urgency).
 Astronomical events are created in a simulator that uses information from a **catalog of bright star**  objects (Bright Star Catalogue).
 The catalog is stored locally in Redis and we use it to create events.
+
+
 <img src="https://github.com/einav242/BIG-DATA/blob/main/images/REDIS.jpg">
 
 # **Saving the events in the cloud**
