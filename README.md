@@ -29,6 +29,8 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
 • The system displays the solar activity forecast for the next few hours from (https://theskylive.com/).
 
+<img width=700" src="https://github.com/einav242/BIG-DATA/blob/main/images/dashborad.jpeg">
+
 # **Search and locate by Elasticsearch:**
 There are 3 search options
 1. ll the events, in which any star is involved in a time frame.
