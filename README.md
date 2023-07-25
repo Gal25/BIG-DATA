@@ -22,6 +22,7 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
 # **Dashboard**
 <img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/dashborad.jpg">
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/dash2.jpg">
 • The system displays a list of recent event data within the Dashboard.
 
 • A recent event will be displayed separately with full details about the source and if the urgency level is 4 or higher it is highlighted and there are UX effects to attract the user's attention.
