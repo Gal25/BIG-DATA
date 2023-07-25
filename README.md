@@ -3,7 +3,7 @@
 
 # **goal**
 In this project, we designed a BigData processing system fed by relays that warn of astronomical events.
-The system displays the events in real time or at a daily update level, stores and enables analysis and search
+The system displays the events in real time or at a daily update level, stores and enables analysis and search.
 
 # **Creating astronomical events in the simulator**
 The system displays every astronomical event (contains date and time, telescope, location in RA and DEC units, type of event, level of urgency).
