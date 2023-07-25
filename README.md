@@ -33,12 +33,16 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
 
 # **Search and locate by Elasticsearch:**
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/search.jpeg">
+
 There are 3 search options
 1. ll the events, in which any star is involved in a time frame.
 2. All events, or events of a certain type, within a time frame.
 3. All events originating from a certain observatory/telescope in a time frame.
 
 # **Anzalia**
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph1.jpeg">
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph2.jpeg">
 o Distribution of the types of events in the last week (cut by urgency 1-5)
 
 o Graph of the distribution of asteroids that passed near KA in the last month (by size)
