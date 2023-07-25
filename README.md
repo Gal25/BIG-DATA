@@ -36,7 +36,7 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 <img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/search.jpeg">
 
 There are 3 search options
-1. ll the events, in which any star is involved in a time frame.
+1. All the events, in which any star is involved in a time frame.
 2. All events, or events of a certain type, within a time frame.
 3. All events originating from a certain observatory/telescope in a time frame.
 
