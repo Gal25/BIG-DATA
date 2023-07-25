@@ -1,17 +1,14 @@
 // Import required modules
 const fs = require('fs');
 const moment = require('moment');
+const redis = require('redis');
 
-// Function to generate a random value for RA between 0 and 24 hours
-function generateRandomRA() {
-    return Math.random() * 24;
-  }
-  
-  // Function to generate a random value for Dec between -90 and 90 degrees
-  function generateRandomDec() {
-    return Math.random() * 180 - 90;
-  }
-  
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 // List of telescopes
 const telescopes = [
@@ -40,34 +37,64 @@ const eventType = [
 
 
 // Function to create a new message
-function createMessage() {
+async function createMessage() {
+  
+  const runResult = await run();
   const timestamp = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 
   const message = {
     timestamp: timestamp,
     telescope: telescopes[Math.floor(Math.random() * telescopes.length)],
     location: {
-        RA: generateRandomRA(),
-        DEC: generateRandomDec(),
+      RA: runResult.RA,
+      DEC: runResult.DEC
     },
     eventType: eventType[Math.floor(Math.random() * eventType.length)],
-    urgencyLevel: Math.floor(Math.random() * 5)
+    urgencyLevel: Math.floor(Math.random() * 5)+1
   };
-
   return message;
 }
+module.exports = { createMessage }
+// // Generate 5 events per minute indefinitely
+// function generateEvents() {
+//     return new Promise((resolve, reject) => {
+//       const interval = 60 * 1000 / 5; // Interval between each event in milliseconds
+//       let counter = 0;
+  
+//       const intervalId = setInterval(() => {
 
-// Generate 5 events per minute indefinitely
-function generateEvents() {
-    const interval = 60 * 1000 / 5; // Interval between each event in milliseconds
+//           const eventMessage = createMessage();
+//           sleep(700)
+//             .then(() => {
+//               console.log(eventMessage);
+//               counter++;
+//               getMessage(eventMessage);
+//             })
+//             .catch(reject);
   
-    setInterval(() => {
-      for (let i = 0; i < 5; i++) {
-        const eventMessage = createMessage();
-        console.log(eventMessage);
-      }
-    }, interval);
-  }
+//       }, interval);
+//     });
+    
+//   }
+
+
+async function run() {
+  const client = redis.createClient({
+    url: 'redis://localhost:6379',
+  });
+
+  await client.connect();
+
+  const starKey = 'harvard_ref_#:'+ Math.floor(Math.random() * 9110); // Replace with the appropriate key
+
+  const data = await client.get(starKey);
+  const starData = JSON.parse(data);
+  const { RA, DEC } = starData;
+  await client.quit(); // Close the Redis client connection
+  return { RA ,DEC };
+}
+
+
   
-  // Start generating events
-  generateEvents();
+
+// generateEvents();
