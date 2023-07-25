@@ -1,5 +1,5 @@
 # Astronomical events & alerts # 
- <img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/WhatsApp%20Image%202023-07-25%20at%2014.58.58.jpeg">
+ <img width="250" src="https://github.com/einav242/BIG-DATA/blob/main/images/WhatsApp%20Image%202023-07-25%20at%2014.58.58.jpeg">
 
 # **goal**
 In this project, we designed a BigData processing system fed by relays that warn of astronomical events.
@@ -11,15 +11,15 @@ Astronomical events are created in a simulator that uses information from a **ca
 The catalog is stored locally in Redis and we use it to create events.
 
 
-<img src="https://github.com/einav242/BIG-DATA/blob/main/images/REDIS.jpg">
+<img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/REDIS.jpg">
 
 
 # **Saving the events in the cloud** 
 We save the events in the **kafka** cloud.
 The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
- <img src="https://github.com/einav242/BIG-DATA/blob/main/images/kafka.png">
-   <img src="https://github.com/einav242/BIG-DATA/blob/main/images/Elastic.png">
+ <img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/kafka.png">
+   <img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/Elastic.png">
 
 # **Dashboard**
 • The system displays a list of recent event data within the Dashboard.
