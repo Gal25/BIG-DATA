@@ -1,4 +1,5 @@
-# Astronomical events & alerts #  <img src="https://github.com/einav242/BIG-DATA/blob/main/images/WhatsApp%20Image%202023-07-25%20at%2014.58.58.jpeg">
+# Astronomical events & alerts # 
+ <img src="https://github.com/einav242/BIG-DATA/blob/main/images/WhatsApp%20Image%202023-07-25%20at%2014.58.58.jpeg">
 
 # **goal**
 In this project, we designed a BigData processing system fed by relays that warn of astronomical events.
