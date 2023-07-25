@@ -1,6 +1,6 @@
  <img width="900" src="https://github.com/einav242/BIG-DATA/blob/main/images/Astronomical%20Events%20%26%20Alerts.jpg">
 
-# **goal**
+# **Goal**
 In this project, we designed a BigData processing system fed by relays that warn of astronomical events.
 The system displays the events in real time or at a daily update level, stores and enables analysis and search.
 
@@ -45,7 +45,7 @@ There are 3 search options
 <img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph2.jpeg">
 o Distribution of the types of events in the last week (cut by urgency 1-5)
 
-o Graph of the distribution of asteroids that passed near KA in the last month (by size)
+o Graph of the distribution of asteroids that passed near Earth in the last month (by size)
 
 o Today's rise, transit and set times of The Sun
 
