@@ -30,7 +30,7 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
 • The system displays the solar activity forecast for the next few hours from (https://theskylive.com/).
 
-# **Search and locate by ELT:**
+# **Search and locate by Elasticsearch:**
 There are 3 search options
 1. ll the events, in which any star is involved in a time frame.
 2. All events, or events of a certain type, within a time frame.
