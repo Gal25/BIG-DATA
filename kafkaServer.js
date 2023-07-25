@@ -1,51 +1,83 @@
-// https://www.cloudkarafka.com/ הפעלת קפקא במסגרת ספק זה
+const { json } = require("body-parser");
 
-const uuid = require("uuid");
-const Kafka = require("node-rdkafka");
+// const redis = require('redis');
+var starData;
 
-const kafkaConf = {
-  "group.id": "cloudkarafka-example",
-  "metadata.broker.list": "moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094".split(","),
-  "socket.keepalive.enable": true,
-  "security.protocol": "SASL_SSL",
-  "sasl.mechanisms": "SCRAM-SHA-256",
-  "sasl.username": "mo0oa5gi",
-  "sasl.password": "4ozx-X3Eaj0H9bvA96qmmD9MY-WRMkIA",
-  "debug": "generic,broker,security"
+async function checkNextStarName(name, index, redisClient) {
+  if (index > 9110) {
+    console.log('Star not found');
+    return;
+  }
+  const starKeystr = 'harvard_ref_#:' + index;
+  try {
+    const data = await redisClient.get(starKeystr);
+    starData = JSON.parse(data);
+    if (starData && index+'' === name+'') {
+      // console.log(starData);
+      return starData;
+    } else {
+      return checkNextStarName(name, index + 1, redisClient);
+    }
+  } catch (error) {
+    console.error('Error retrieving star data:', error);
+  }
+}
+
+
+//////////////////////////////////////////
+
+async function checkNextStar(ra, dec, index,redisClient){
+  if (index > 9110) {
+    console.log('Star not found-ra,dec');
+    return;
+  }
+  const starKeystr = 'harvard_ref_#:' + index;
+  try {
+    const data = await redisClient.get(starKeystr);
+    starData = JSON.parse(data);
+    if (starData && starData.RA === ra && starData.DEC === dec) {
+      // console.log(starData);
+      return starData;
+    } else {
+      return checkNextStar(ra, dec, index + 1, redisClient);
+    }
+  } catch (error) {
+    console.error('Error retrieving star data:', error);
+  }
 };
 
-const prefix = "mo0oa5gi-";
-const topic = `${prefix}new`;
-const producer = new Kafka.Producer(kafkaConf);
 
-const genMessage = m => new Buffer.alloc(m.length,m);
-//const prefix = process.env.CLOUDKARAFKA_USERNAME;
 
-const topics = [topic];
-const consumer = new Kafka.KafkaConsumer(kafkaConf, {
-  "auto.offset.reset": "beginning"
-});
+async function findStarByRADec(ra, dec, redisClient){
+  const star = await checkNextStar(ra, dec, 1, redisClient);
+  return star
+};
 
-consumer.on("error", function(err) {
-  console.error(err);
-});
-consumer.on("ready", function(arg) {
-  console.log(`Consumer ${arg.name} ready`);
-  consumer.subscribe(topics);
-  consumer.consume();
-});
 
-consumer.on("data", function(m) {
- console.log(m.value.toString());
-});
-consumer.on("disconnected", function(arg) {
-  process.exit();
-});
-consumer.on('event.error', function(err) {
-  console.error(err);
-  process.exit(1);
-});
-consumer.on('event.log', function(log) {
-  console.log(log);
-});
-consumer.connect();
+///////////////////////////////////////
+async function findStarByNAME(name, redisClient){
+  const star = await checkNextStarName(name, 1, redisClient);
+  // console.log("star_redis: ",star)
+  return star;
+};
+
+
+module.exports.findStarByNAME = findStarByNAME
+module.exports.findStarByRADec = findStarByRADec
+
+  // Create a Redis client
+  // const redisClient = redis.createClient({
+  //   url: 'redis://localhost:6379',
+  // });
+  
+  // redisClient.connect();
+  // console.log('Connected to Redis');
+  
+    // // Call the function after the connection is established
+    // const raToSearch = "00:05:42.00";
+    // const decToSearch = "+13:23:46.00";
+    // const name = "G1IV";
+    
+  
+    // findStarByNAME(name);
+    // findStarByRADec(raToSearch, decToSearch);
