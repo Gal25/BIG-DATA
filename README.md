@@ -18,7 +18,7 @@ The catalog is stored locally in Redis and we use it to create events.
 We save the events in the **kafka** cloud.
 The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
- <img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/kafka.png">
+ <img width="150" src="https://github.com/einav242/BIG-DATA/blob/main/images/kafka.png">
    <img width="200" src="https://github.com/einav242/BIG-DATA/blob/main/images/Elastic.png">
 
 # **Dashboard**
