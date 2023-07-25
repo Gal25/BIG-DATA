@@ -1,4 +1,5 @@
 # Astronomical events & alerts #
+<img src="תיקיית-התמונות/שם-התמונה.jpg">
 
 # **goal**
 In this project, we designed a BigData processing system fed by relays that warn of astronomical events.
