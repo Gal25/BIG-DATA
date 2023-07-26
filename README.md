@@ -55,17 +55,17 @@ o Today Sunspots Activity image
 <img  width="500" src="https://github.com/einav242/BIG-DATA/blob/main/images/system.png">
 
 # How to run:
-o Make a clone of the project
+o Clone the project
 
-o Elastic **docker** must be run on port 9200 and Redis on port 6379
+o run on **docker** Elasticsearch (must be  run on port 9200 and Redis on port 6379)
 
-Open 5 terminals
+o Open 5 terminals
 
 1. cd elastic_kafka\Speed and run node **producer_cloud.js**
 
 2. cd elastic_kafka\Speed and run node **consumer_cloud.js**
 
-3. Make cd Dashboard\Batch\sunServerpy
+3. cd Dashboard\Batch\sunServerpy
 
 3.1 py -m venv venv
 
