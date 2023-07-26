@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include("../partials/headers") %>
+    <!--ariel ws-->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+      crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      function setWs() {
+
+      }
+    </script>
+    <!--ariel ws -->
+    <style>
+      .container {
+        margin-top: 50px;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      input[type="text"] {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      input[type="datetime-local"] {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+        padding: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #45a083;
+      }
+
+      body {
+        background: url("../images/bg-home.jpg") no-repeat scroll center top #000000;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        width: auto;
+        z-index: 3;
+      }
+
+      .sidebar{
+	background-color: transparent;
+	color: #a3a3a3;
+      }
+
+    .text-white {
+        font-family: audiowide-regular-webfont;
+        font-size: 25px;
+        color: #f4f4f4;
+        margin-left: 60px;
+        text-align: center;
+      }
+
+    .material-icons-white {
+            font-family: audiowide-regular-webfont;
+            font-size: 1000px;
+            color: #f4f4f4;
+            margin-left: 60px;
+            text-align: center;
+      }
+
+    .nav-item {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+
+    .text-table-blue {
+        font-family: audiowide-regular-webfont;
+        font-size: 25px;
+        color: #54b0bc;
+        margin-left: 0px;
+        text-align: left;
+      }
+
+    .card-header-blue {
+        background-color: #54b0bc;
+        color: white;
+      }
+      
+    </style>
+</head>
+
+<body class="" onload="setWs()">
+  <div class="wrapper ">
+    <%- include("../partials/sidebar",{ choise: 'table' }) %>
+      <div class="main-panel">
+        <div class="content">
+          <div class="container">
+            <div class="row">
+              <div class=col-lg-12>
+                <div class="card">
+                  <div class="card-header-blue">
+                    <h4 class="card-title">Result of the search</h4>
+                    <p id="message"></p>
+                    <p class="card-category"></p>
+                  </div>
+                  <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                      <thead class="text-table-blue">
+                        <th>timestamp</th>
+                        <th>telescope</th>
+                        <th>RA</th>
+                        <th>DEC</th>
+                        <th>eventType</th>
+                        <th>urgencyLevel</th>
+                      </thead>
+                      <tbody id="table_search">
+                        <% for (let i=0; i < startData.length; i++) { %>
+                          <tr>
+                            <% for (let j=0; j < startData[i].length; j++) { %>
+                              <td>
+                                <%= startData[i][j] %>
+                              </td>
+                              <% } %>
+                          </tr>
+                          <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include("../partials/dashcode") %>
+</body>
+
+</html>
