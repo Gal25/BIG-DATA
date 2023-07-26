@@ -54,4 +54,30 @@ o Today Sunspots Activity image
 # Diagram showing technological mapping of the system:
 <img  width="500" src="https://github.com/einav242/BIG-DATA/blob/main/images/system.png">
 
+# How to run:
+o Make a clone of the project
+
+o Elastic **docker** must be run on port 9200 and Redis on port 6379
+
+Open 5 terminals
+
+1. cd elastic_kafka\Speed and run node **producer_cloud.js**
+
+2. cd elastic_kafka\Speed and run node **consumer_cloud.js**
+
+3. Make cd Dashboard\Batch\sunServerpy
+
+3.1 py -m venv venv
+
+3.2 "./venv/scripts/activate"
+
+3.3 uvicorn **main:app** --reload
+
+4. cd **Dashboard\Serving** and run npm start
+
+5. cd **elastic_kafka\Serving** and run npm start
+
+Finally go to **http://localhost:3000**
+
+
 
