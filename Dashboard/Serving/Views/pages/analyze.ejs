@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include("../partials/headers") %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+      crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      let eventChart;
+      let eventChart2;
+      
+      function setWs() {
+        // events
+        socket.on('eventGraph', (eventGraph) => {
+          updateGraph1(eventGraph);
+        });
+        
+        // neo
+        socket.on('eventGraph2', (eventGraph2) => {
+          updateGraph2(eventGraph2);
+        });
+      }
+
+      function updateGraph2(eventGraph2) {
+        // Render the eventGraph2 using Chart.js
+        const ctx2 = document.getElementById('eventGraph2').getContext('2d');
+        if (eventChart2) {
+          eventChart2.data.labels = eventGraph2.map(data => data.eventType);
+          eventChart2.data.datasets[0].data = eventGraph2.map(data => data.count);
+          eventChart2.options.title.text = 'Asteroids that passed near the Earth in the last month';
+          eventChart2.update(); // Update the chart
+        } else {
+          eventChart2 = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+              labels: eventGraph2.map(data => data.eventType),
+              datasets: [{
+                label: 'Event Distribution - Range',
+                data: eventGraph2.map(data => data.count),
+                backgroundColor: 'rgba(128, 0, 128, 0.2)', // Set to purple (RGB value: 128, 0, 128)
+                borderColor: 'rgba(128, 0, 128, 1)', // Set to purple (RGB value: 128, 0, 128)
+                borderWidth: 1
+              }]
+            },
+            options: {
+              title: { // Add the title options here
+                text: 'Asteroids that passed near the Earth in the last month', // Title text
+                fontSize: 5, // Title font size
+                fontStyle: 'bold', // Title font style
+                padding: 5 // Padding between title and the chart
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  precision: 0,
+                  stepSize: 1
+                }
+              }
+            }
+          });
+        }
+      }
+
+      function updateGraph1(eventGraph) {
+        const ctx = document.getElementById('eventChart').getContext('2d');
+        if (eventChart) {
+          eventChart.data.labels = eventGraph.map(data => data.eventType);
+          eventChart.data.datasets[0].data = eventGraph.map(data => data.count);
+          eventChart.options.title.text = 'Event types in the last week (cut by urgency level 1-5)';
+          eventChart.update(); // Update the chart
+        } else {
+          eventChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: eventGraph.map(data => data.eventType),
+              datasets: [{
+                label: 'Event Distribution',
+                data: eventGraph.map(data => data.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              title: { // Add the title options here
+                text: 'Event types in the last week (cut by urgency level 1-5)', // Title text
+                fontSize: 10, // Title font size
+                fontStyle: 'bold', // Title font style
+                padding: 5 // Padding between title and the chart
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  precision: 0,
+                  stepSize: 1
+                }
+              }
+            }
+          });
+        }
+      }
+    
+    </script>
+    
+    <style>
+      .container {
+        margin-top: 100px;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      input[type="text"] {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      input[type="datetime-local"] {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+        padding: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #45a049;
+      }
+
+      .canvas-container {
+        margin-bottom: 20px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100vh;
+        /* Optional: Set the container to take the full viewport height */
+      }
+
+      .col-md-8 {
+        position: relative;
+      }
+
+      .sun-info-container {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: transparent;
+        color: #a3a3a3;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sun-info-container2 {
+        border: 2px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color:#ffffff;
+        display: flex;
+        flex-direction: column;
+
+      }
+
+      .sun-info-container label {
+        font-size: 1.2em;
+        color: #fbfbfb;
+
+      }
+
+      .sun-info-container time {
+        font-size: 1.5em;
+
+      }
+
+      .sun-info-container .rise {
+        margin-top: 10px;
+
+      }
+
+      .sun-info-container .transit {
+        margin-top: 20px;
+      }
+
+      .sun-info-container .set {
+        margin-top: 30px;
+      }
+
+      .sun-info-container .rise,
+      .sun-info-container .transit,
+      .sun-info-container .set {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sun-info-container .rise azimuth,
+      .sun-info-container .transit altitude,
+      .sun-info-container .set azimuth {
+        font-size: 0.9em;
+      }
+
+      .sun-info-container .set time {
+        margin-left: 24px;
+      }
+
+      p[style="font-size: 20px;"] a {
+        color: #000000;
+      }
+
+      body {
+        background: url("../images/bg-home.jpg") no-repeat scroll center top #000000;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        width: auto;
+        z-index: 3;
+      }
+
+      .sidebar {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+
+      .text-white {
+        font-family: audiowide-regular-webfont;
+        font-size: 25px;
+        color: #f4f4f4;
+        margin-left: 60px;
+        text-align: center;
+      }
+
+      .material-icons-white {
+        font-family: audiowide-regular-webfont;
+        font-size: 1000px;
+        color: #f4f4f4;
+        margin-left: 60px;
+        text-align: center;
+      }
+
+      .nav-item {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+    </style>
+
+</head>
+
+<body class="" onload="setWs()">
+  <div class="wrapper ">
+    <%- include("../partials/sidebar",{ choise: 'graph' }) %>
+      <div class="main-panel">
+        <div class="content">
+          <div class="container-fluid" style="margin-top: 30px;">
+            <div class="row">
+              <!-- rise, transit and set -->
+              <div class="col-md-6">
+                <p style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>
+                    Today's rise,
+                    <a href="https://en.wikipedia.org/wiki/Transit_(astronomy)" style="color: #29459a">transit</a> and
+                    set times of
+                    <a href="https://theskylive.com/sun-info" style="color: #29459a">The Sun</a> from
+                    Greenwich, United Kingdom
+                    (all times relative to the local timezone Europe/London):</strong>
+                </p>
+                <div class="sun-info-container">
+                  <div class="rise" style="color: #f4f4f4; font-family: Georgia, serif;">
+                    <label><strong>RISE</strong></label>
+                    <time>
+                      <strong>
+                      <%= sun['rise']['time'] %>
+                    </strong>
+                    </time>
+                    <azimuth>
+                      <strong>
+                      <%= sun['rise']['azimuth'] %>
+                    </strong>
+                    </azimuth>
+                  </div>
+                  <div class="transit" style="color: #f4f4f4; font-family: Georgia, serif;">
+                    <label><strong>TRANSIT</strong></label>
+                    <time><strong>
+                      <%= sun['transit']['time'] %>
+                    </strong>
+                    </time>
+                    <altitude><strong>
+                      <%= sun['transit']['altitude'] %>
+                    </strong>
+                    </altitude>
+                  </div>
+                  <div class="set" style="color: #f4f4f4; font-family: Georgia, serif;">
+                    <label><strong>SET </strong></label>
+                    <span class="time-wrapper">
+                      <time><strong>
+                        <%= sun['set']['time'] %>
+                      </strong>
+                      </time>
+                    </span>
+                    <azimuth>
+                      <strong>
+                      <%= sun['set']['azimuth'] %>
+                    </strong>
+                    </azimuth>
+                  </div>
+                </div>
+              </div>
+              <!-- rise, transit and set -->
+              <div class="col-md-6">
+                <!-- the image of the sun -->
+                <h1 style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>Today Sunspots Activity:</strong></h1>
+                <img src=<%=img %> width="400" height="400" id="sunspotsImg"/>
+              </div>
+              <!-- the image of the sun -->
+            </div>
+            <div class="row">
+              <!-- the graph of the events-->
+              <div class="col-md-6">
+                <h1 style="font-size: 16px;"></h1>
+                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Event types in the last week (cut by urgency level
+                    1-5)</strong></h1>
+                <div class="sun-info-container2">
+                  <canvas id="eventChart" width="100" height="50"></canvas>
+                </div>
+                <!-- the graph of the events-->
+              </div>
+              <!-- the neo graph-->
+              <div class="col-md-6">
+                <h1 style="font-size: 16px;"></h1>
+                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Asteroids that passed near the Earth in the last
+                    month</strong></h1>
+                <div class="sun-info-container2">
+                  <canvas id="eventGraph2" width="100" height="50"></canvas>
+                </div>
+                <!-- the neo graph-->
+              </div>
+            </div>
+            <%- include("../partials/dashcode") %>
+</body>
+
+</html>

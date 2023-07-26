@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include("../partials/headers") %>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+      crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      function setWs() {
+        // neo table
+        socket.on('formattedDataUpdate', (updatedData) => {
+          formattedData = updatedData // Update the formattedData variable
+          updateTable(); // Call a function to update the table with the new formattedData
+        });
+
+        // last event table
+        socket.on('events', (events) => {
+          eventData = events // Update the formattedData variable
+          updateEvent();
+        });
+
+        // all events table
+        socket.on('all_event', (msg) => {
+          updateAllEvent(msg)
+        });
+
+      }
+
+      // neo
+      function updateTable() {
+        const tableBody = document.getElementById('formattedDataTableBody');
+        tableBody.innerHTML = ''; // Clear the existing table rows
+
+        formattedData.forEach((row) => {
+          const newRow = document.createElement('tr');
+
+          row.forEach((cell) => {
+            const newCell = document.createElement('td');
+            const cellText = document.createTextNode(cell);
+            newCell.appendChild(cellText);
+            newRow.appendChild(newCell);
+          });
+
+          tableBody.appendChild(newRow);
+        });
+      }
+
+      // last event
+      function updateEvent() {
+        const tableBody = document.getElementById('updateEventBody');
+        tableBody.classList.remove('blink');
+        tableBody.innerHTML = ''; // Clear the existing table rows
+
+        for (const prop in eventData) {
+          const newRow = document.createElement('tr');
+
+          const propNameCell = document.createElement('td');
+          propNameCell.textContent = prop;
+          newRow.appendChild(propNameCell);
+
+          const propValueCell = document.createElement('td');
+          propValueCell.textContent = eventData[prop];
+          newRow.appendChild(propValueCell);
+
+          // Check if the property is 'UrgencyLevel' and if its value is greater than or equal to 4
+          if (prop === 'UrgencyLevel' && parseInt(eventData[prop]) >= 4) {
+            tableBody.classList.add('blink');
+          }
+
+          tableBody.appendChild(newRow);
+        }
+      }
+
+      // all event
+      function updateAllEvent(msg) {
+        const tableBody = document.getElementById('tableAllevents');
+        if (tableBody.rows.length >= 10) {
+          tableBody.deleteRow(0);
+        }
+        msg.forEach((row) => {
+          const newRow = document.createElement('tr');
+          row.forEach((cell) => {
+            const newCell = document.createElement('td');
+            const cellText = document.createTextNode(cell);
+            newCell.appendChild(cellText);
+            newRow.appendChild(newCell);
+          });
+          tableBody.appendChild(newRow);
+        })
+      }
+
+    </script>
+
+    <style>
+      .container {
+        margin-top: 50px;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      input[type="text"] {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      input[type="datetime-local"] {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+        padding: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #54b0bc;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #54b0bc;
+      }
+
+      .card-header-blue {
+        background-color: #86ded5;
+        /* צבע רקע תכלת */
+        color: white;
+        /* צבע הכתב כתכלת */
+      }
+
+      .text-blue {
+        color: #009688;
+        /* צבע טקסט כתכלת */
+      }
+
+      .card-header-blue2 {
+        background-color: #009688;
+        /* צבע רקע תכלת */
+        color: white;
+        /* צבע הכתב כתכלת */
+      }
+
+      .satellite {
+        display: block;
+        left: 310px;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        top: 50px;
+        width: auto;
+        z-index: 50;
+      }
+
+      .h1 {
+        color: #FFFFFF;
+        display: block;
+        float: right;
+        font-family: audiowide-regular-webfont;
+        font-size: 50px;
+        font-weight: normal;
+        line-height: 60px;
+        margin: 0;
+        padding: 0;
+        left: -10px;
+        top: -300px;
+        position: relative;
+        text-align: center;
+        text-transform: uppercase;
+        width: 503px;
+        z-index: 60;
+      }
+
+      .h2 {
+        color: #FFFFFF;
+        display: block;
+        float: right;
+        font-family: audiowide-regular-webfont;
+        font-size: 18px;
+        font-weight: normal;
+        line-height: 60px;
+        margin: 0;
+        padding: 0;
+        left: 500px;
+        top: -190px;
+        position: relative;
+        text-align: center;
+        width: 503px;
+        z-index: 60;
+      }
+
+      .sidebar {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+
+      .text-white {
+        font-family: audiowide-regular-webfont;
+        font-size: 25px;
+        color: #f4f4f4;
+        margin-left: 60px;
+        text-align: center;
+      }
+
+      .nav-item {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+
+      .material-icons-white {
+        font-family: audiowide-regular-webfont;
+        color: #f4f4f4;
+        font-size: 0px;
+
+      }
+
+      body {
+        background: url("../images/bg-home.jpg") no-repeat scroll center top #000000;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        width: auto;
+        z-index: 3;
+      }
+    </style>
+    
+</head>
+
+<body class="" onload="setWs()">
+  <div class="wrapper ">
+    <%- include("../partials/sidebar",{ choise: 'dashbord' }) %>
+      <div class="main-panel">
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+            </div>
+            <div class="row">
+              <%- include("../partials/events", { all_events, eventData }) %>
+            </div>
+            <div class="row">
+              <%- include("../partials/tableSun", { ans }) %>
+                <%- include("../partials/tableNeo", { formattedData }) %>
+            </div>
+          </div>
+        </div>
+        <%- include("../partials/dashcode") %>
+</body>
+
+</html>
