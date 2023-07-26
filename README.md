@@ -67,11 +67,11 @@ o Open 5 terminals
 
 3. cd Dashboard\Batch\sunServerpy
 
-3.1 py -m venv venv
+  3.1 py -m venv venv
 
-3.2 "./venv/scripts/activate"
+  3.2 "./venv/scripts/activate"
 
-3.3 uvicorn **main:app** --reload
+  3.3 uvicorn **main:app** --reload
 
 4. cd **Dashboard\Serving** and run npm start
 
