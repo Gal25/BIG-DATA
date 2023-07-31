@@ -52,7 +52,7 @@ o Today's rise, transit and set times of The Sun
 o Today Sunspots Activity image
 
 # Diagram showing technological mapping of the system:
-<img  width="500" src="https://github.com/einav242/BIG-DATA/blob/main/images/system.png">
+<img  width="500" src="https://github.com/einav242/BIG-DATA/blob/main/images/arc.jpg">
 
 # How to run:
 o Clone the project
