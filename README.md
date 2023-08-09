@@ -33,7 +33,7 @@ The data for the **server** or the **Elasticsearch** is pulled through Kafka.
 
 
 # **Search and locate by Elasticsearch:**
-<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/search.jpeg">
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/WhatsApp Image 2023-08-09 at 18.10.52.jpeg.jpeg">
 
 There are 3 search options
 1. All the events, in which any star is involved in a time frame.
