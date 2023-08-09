@@ -41,7 +41,7 @@ There are 3 search options
 3. All events originating from a certain observatory/telescope in a time frame.
 
 # **Analyze**
-<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph1.jpeg">
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/צילום מסך 2023-08-09 180416.png">
 <img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph2.jpeg">
 o Distribution of the types of events in the last week (cut by urgency 1-5)
 
