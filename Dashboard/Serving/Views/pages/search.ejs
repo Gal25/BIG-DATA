@@ -114,6 +114,12 @@
         background-color: transparent;
         color: #a3a3a3;
       }
+      .search-section {
+        border: 1px solid #ccc; /* Add a border around each search section */
+        padding: 5px; /* Add padding for spacing */
+        margin-bottom: 10px; /* Add margin to separate sections */
+      }
+
 
     </style>
 </head>
@@ -127,6 +133,7 @@
           <div class="container">
             <div class="row">
               <div class="col-md-12">
+                <div class="search-section">
                 <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by bright star</strong></h1>
                 <input type="text" id="fullSearchInput_name" placeholder="Put star index">
                 <br>
@@ -143,9 +150,11 @@
                 <br>
                 <ul id="fullSearchResults"></ul>
               </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-md-12">
+                <div class="search-section">
                 <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by event type</h1></strong>
                 <input type="text" id="fullSearchInput_type" placeholder="put event type">
                 <br>
@@ -162,9 +171,11 @@
                 <br>
                 <ul id="fullSearchResults_type"></ul>
               </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-md-12">
+                <div class="search-section">
                 <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by telescope</h1></strong>
                 <input type="text" id="fullSearchInput_telescope" placeholder="put telescope name">
                 <br>
@@ -181,6 +192,7 @@
                 <br>
                 <ul id="fullSearchResults_telescope"></ul>
               </div>
+            </div>
             </div>
           </div>
         </div>
