@@ -42,7 +42,6 @@ def create_table() -> list:
         print("There are less than two tables on the page.")
         return None
 
-
 def rise_set():
     # The URL of the webpage containing the sun rise/set information
     URL = "https://theskylive.com/sun-info"
@@ -59,7 +58,6 @@ def rise_set():
     # Finding the div elements for rise, transit, and set using their respective classes
     # 'rise', 'transit', and 'set'
     rise = soup.find('div', {'class': 'rise'})
-    transit = soup.find('div', {'class': 'transit'})
     set = soup.find('div',{'class': 'set'})
 
     # Extracting the relevant data from each div and storing it in separate dictionaries
@@ -67,12 +65,6 @@ def rise_set():
         "azimuth": rise.find('azimuth').text,
         "label": rise.find('label').text,
         "time": rise.find('time').text,
-    }
-
-    transit_data = {
-        "altitude" : transit.find('altitude').text,
-        "label": transit.find('label').text,
-        "time": transit.find('time').text,
     }
 
     set_data = {
@@ -84,7 +76,6 @@ def rise_set():
     # Creating a dictionary to hold all the sun data, including rise, transit, and set
     sun_data = {
         "rise": rise_data,
-        "transit": transit_data,
         "set": set_data,
     }
 
@@ -93,7 +84,6 @@ def rise_set():
 
     # Returning the JSON data containing sun rise, transit, and set information
     return json_data
-
 
 def bringImage() -> bytes:
     # The URL of the webpage containing the sun image
@@ -120,4 +110,57 @@ def bringImage() -> bytes:
     
     # Returning the complete image URL
     return image_url
+
+def bringImage2():
+    url = "https://theskylive.com/sun-info"
+    response = requests.get(url)
+    html_content = response.content
+    soup = BeautifulSoup(html_content, 'html.parser')
+    img_tag = soup.find('img', src=lambda value: value and "objects/sun/sky/skymap.png" in value)
+    if img_tag:
+        prefix = 'https://theskylive.com/'
+        img_src = img_tag['src']
+        image_url = prefix + img_src
+        return image_url
+    else:
+        print("Image src not found.")
+
+def sunData():
+    # The URL of the webpage containing the table we want to extract
+    URL = "https://theskylive.com/sun-info"
+
+    # Sending an HTTP GET request to the URL and getting the response
+    response = requests.get(URL)
+    
+    # Extracting the HTML content from the response
+    html_content = response.text
+    
+    # Parsing the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+    
+    # Finding all the table elements in the parsed HTML content
+    tables = soup.find_all('table')
+
+    if len(tables) >= 3:
+        # Selecting the third table (index 2) from the list of tables
+        second_table = tables[1]
+        table_data = []
+
+        # Finding all the table rows (<tr>) within the selected table
+        rows = second_table.find_all('tr')
+        for row in rows:
+            # Finding all the table cells (<td>) within the row
+            columns = row.find_all('td')
+
+            # Extracting the text from each cell and removing leading/trailing whitespaces
+            row_data = [column.text.strip() for column in columns]
+            
+            # Adding the list of cell data for each row to the table_data list
+            table_data.append(row_data)
+
+        return table_data
+    else:
+        # If there are less than three tables on the page, print a message and return None
+        print("There are less than two tables on the page.")
+        return None
 
