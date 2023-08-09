@@ -12,13 +12,13 @@
       const socket = io();
       let eventChart;
       let eventChart2;
-      
+
       function setWs() {
         // events
         socket.on('eventGraph', (eventGraph) => {
           updateGraph1(eventGraph);
         });
-        
+
         // neo
         socket.on('eventGraph2', (eventGraph2) => {
           updateGraph2(eventGraph2);
@@ -103,10 +103,15 @@
           });
         }
       }
-    
+
     </script>
-    
+
     <style>
+
+    .table th, .table td {
+      padding: 5px; /* כאן ניתן לשנות את הערכים כפי שתרצה */
+    }
+
       .container {
         margin-top: 100px;
       }
@@ -170,20 +175,23 @@
       }
 
       .sun-info-container {
-        border: 2px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
+        border: 2px solid #e6eb51;
+        padding: 5px;
+        margin-bottom: 10px 0;
+        margin-left: -10px;
         background-color: transparent;
         color: #a3a3a3;
         display: flex;
         flex-direction: column;
+        width: 88%;
+        height: 130px;
       }
 
       .sun-info-container2 {
         border: 2px solid #ccc;
         padding: 10px;
         margin-bottom: 10px;
-        background-color:#ffffff;
+        background-color: #ffffff;
         display: flex;
         flex-direction: column;
 
@@ -205,30 +213,26 @@
 
       }
 
-      .sun-info-container .transit {
-        margin-top: 20px;
-      }
-
       .sun-info-container .set {
         margin-top: 30px;
       }
 
-      .sun-info-container .rise,
-      .sun-info-container .transit,
-      .sun-info-container .set {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
 
       .sun-info-container .rise azimuth,
-      .sun-info-container .transit altitude,
       .sun-info-container .set azimuth {
         font-size: 0.9em;
+        margin-left: 80px;
+        margin-top: -10px;
       }
 
       .sun-info-container .set time {
-        margin-left: 24px;
+        margin-left: 50px;
+        margin-bottom: 80px;
+      }
+
+      .sun-info-container .rise time {
+        margin-left: 50px;
+        margin-top: -12px;
       }
 
       p[style="font-size: 20px;"] a {
@@ -257,18 +261,27 @@
         text-align: center;
       }
 
+
       .material-icons-white {
         font-family: audiowide-regular-webfont;
-        font-size: 1000px;
         color: #f4f4f4;
-        margin-left: 60px;
-        text-align: center;
+        font-size: 0px;
       }
 
       .nav-item {
         background-color: transparent;
         color: #a3a3a3;
       }
+
+
+      .table-hover tbody tr {
+        transition: background-color 0.3s, color 0.3s; /* יוסיף אנימציה על המעבר */
+      }
+
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: black;
+}
     </style>
 
 </head>
@@ -280,70 +293,98 @@
         <div class="content">
           <div class="container-fluid" style="margin-top: 30px;">
             <div class="row">
+              <!-- the image of the sun -->
+              <div class="col-md-6">
+                <h1 style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>The Sun Position and
+                    Finder Charts:</strong></h1>
+                <img src=<%=sun %> width="500" height="400" id="sunspotsImg"/>
+              </div>
+              <!-- the image of the sun -->
+              <!-- the image of the sun -->
+              <div class="col-md-6">
+                <h1 style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>Today Sunspots
+                    Activity:</strong></h1>
+                <img src=<%=img %> width="400" height="400" id="sunspotsImg"/>
+              </div>
+              <!-- the image of the sun -->
+            </div>
+            <br>
+            <br>
+            <div class="row">
               <!-- rise, transit and set -->
               <div class="col-md-6">
                 <p style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>
                     Today's rise,
-                    <a href="https://en.wikipedia.org/wiki/Transit_(astronomy)" style="color: #29459a">transit</a> and
+                    and
                     set times of
-                    <a href="https://theskylive.com/sun-info" style="color: #29459a">The Sun</a> from
-                    Greenwich, United Kingdom
-                    (all times relative to the local timezone Europe/London):</strong>
+                    <a href="https://theskylive.com/sun-info" style="color: #e6eb51">The Sun</a>
                 </p>
                 <div class="sun-info-container">
                   <div class="rise" style="color: #f4f4f4; font-family: Georgia, serif;">
-                    <label><strong>RISE</strong></label>
+                    <label style="color: #e6eb51;"><strong>RISE</strong></label>
                     <time>
                       <strong>
-                      <%= sun['rise']['time'] %>
-                    </strong>
+                        <%= rise['rise']['time'] %>
+                      </strong>
                     </time>
                     <azimuth>
                       <strong>
-                      <%= sun['rise']['azimuth'] %>
-                    </strong>
+                        <%= rise['rise']['azimuth'] %>
+                      </strong>
                     </azimuth>
                   </div>
-                  <div class="transit" style="color: #f4f4f4; font-family: Georgia, serif;">
-                    <label><strong>TRANSIT</strong></label>
-                    <time><strong>
-                      <%= sun['transit']['time'] %>
-                    </strong>
-                    </time>
-                    <altitude><strong>
-                      <%= sun['transit']['altitude'] %>
-                    </strong>
-                    </altitude>
-                  </div>
                   <div class="set" style="color: #f4f4f4; font-family: Georgia, serif;">
-                    <label><strong>SET </strong></label>
+                    <label style="color: #e6eb51;"><strong>SET </strong></label>
                     <span class="time-wrapper">
                       <time><strong>
-                        <%= sun['set']['time'] %>
-                      </strong>
+                          <%= rise['set']['time'] %>
+                        </strong>
                       </time>
                     </span>
                     <azimuth>
                       <strong>
-                      <%= sun['set']['azimuth'] %>
-                    </strong>
+                        <%= rise['set']['azimuth'] %>
+                      </strong>
                     </azimuth>
                   </div>
                 </div>
               </div>
               <!-- rise, transit and set -->
-              <div class="col-md-6">
-                <!-- the image of the sun -->
-                <h1 style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>Today Sunspots Activity:</strong></h1>
-                <img src=<%=img %> width="400" height="400" id="sunspotsImg"/>
+              <div class="card-body table-responsive" style="background-color: rgba(255, 255, 255, 0.2); pointer-events: none;">
+                <p style="font-size: 20px; color: #f4f4f4; font-family: Georgia, serif;"><strong>
+                  The Sun Physical Data</strong>
+                </p>
+                <table class="table table-hover" style="transition: background-color 0.3s, color 0.3s; align-items: center; ">
+                  <thead class="text-blue">
+                    <tr><strong>
+                      <th style="color: #e6eb51; font-size: 18px; font-family: Georgia, serif;align-items: center; user-select: none;"><strong>Physical Parameter</strong></th>
+                      <th style="color: #e6eb51; font-size: 18px;  font-family: Georgia, serif; align-items: center; user-select: none;"><strong>Value</strong></th>
+                      <th style="color: #e6eb51; font-size: 18px;  font-family: Georgia, serif; align-items: center; user-select: none;"><strong>Relative to Earth</strong></th>
+                    </strong></tr>
+                  </thead>
+                  <tbody>
+                    <% for (let i = 1; i < tableSun.length; i++) { %>
+                      <tr>
+                        <% for (let j = 0; j < tableSun[i].length; j++) { %>
+                          <td style="color: white; user-select: none;">
+                            <%= tableSun[i][j] %>
+                          </td>
+                        <% } %>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
               </div>
-              <!-- the image of the sun -->
+              
             </div>
+            <br>
+            <br>
             <div class="row">
               <!-- the graph of the events-->
               <div class="col-md-6">
                 <h1 style="font-size: 16px;"></h1>
-                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Event types in the last week (cut by urgency level
+                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Event types in the last
+                    week (cut by urgency level
                     1-5)</strong></h1>
                 <div class="sun-info-container2">
                   <canvas id="eventChart" width="100" height="50"></canvas>
@@ -353,7 +394,8 @@
               <!-- the neo graph-->
               <div class="col-md-6">
                 <h1 style="font-size: 16px;"></h1>
-                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Asteroids that passed near the Earth in the last
+                <h1 style="font-size: 20px; color: #f4f4f4;font-family: Georgia, serif;"><strong>Asteroids that passed
+                    near the Earth in the last
                     month</strong></h1>
                 <div class="sun-info-container2">
                   <canvas id="eventGraph2" width="100" height="50"></canvas>
