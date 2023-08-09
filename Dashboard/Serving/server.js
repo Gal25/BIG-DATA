@@ -1,22 +1,13 @@
 const express = require('express'); // Importing Express framework for building the web application
 const socketIO = require('socket.io'); // Importing Socket.IO for real-time communication
-const neo = require('../Speed/neo.js'); 
+const starModel = require('./models/starStores');
+const model = require('./models/sunStores.js');
 const app = express(); // Creating an instance of the Express app
 const server = require('http').createServer(app); // Creating an HTTP server using Express
 const io = socketIO(server); // Creating a Socket.IO server instance to handle real-time communication
 const port = 3000; // Defining the port number on which the server will listen
-const redis_r = require('redis'); 
-const redisClient = redis_r.createClient({ 
-  url: 'redis://localhost:6379', // Configuring the URL and port for connecting to Redis
-});
-redisClient.connect();
-console.log('Connected to Redis');
-const redis = require('../../elastic_kafka/Batch/serverRedis.js'); 
 
-// list of all the events
-const last_events = []; 
-// last event
-var last = null;
+const inventoryRouter = require('./routes/inventory')
 
 // Variables for the distribution of types of events in the last week
 var event1 = 0;
@@ -31,65 +22,104 @@ var range2 = 0;
 var range3 = 0;
 var range4 = 0;
 
+
 // Serves static files from the 'public' directory in the application.
 app.use(express.static('public'))
 
 // Sets the view engine to 'ejs' for rendering dynamic templates using EJS 
 app.set('view engine', 'ejs')
 
-app.get('/', async (req, res) => {
-  const message = 'Hello from JavaScript server!';
-  // ---to get the sun table---
-  ans_str = await sendMessageToFastAPI(message);
-  list_data = JSON.parse(ans_str);
-  ans = list_data.map(item => [...item]);
-  // ---to get the sun table---
+app.use('/', inventoryRouter);
+
+app.get('/search', async (req, res) => {
+  res.render("pages/search")
+})
+
+app.get('/search_by_name', async (req, res) => {
+  const object_name = req.query.name;
+  const start_date = req.query.start;
+  const end_date = req.query.end;
   try {
-    // --to get the neo table--
-    const data = await neo.getData();
-    const jsonData = JSON.parse(data);
+    const { RA, DEC } = await starModel.getRA_DEC(object_name);
+    searchResults = await starModel.quary_by_name(RA, DEC, start_date, end_date);
     const startData = [];
-    for (const item of jsonData) {
+    searchResults.forEach(result => {
+      const source = result._source;
       const formattedItem = [
-        item.id,
-        item.name,
-        item.estimated_diameter.meters.estimated_diameter_min,
-        item.estimated_diameter.meters.estimated_diameter_max,
-        item.close_approach_data[0].close_approach_date_full,
-        item.close_approach_data[0].orbiting_body
+        source.timestamp,
+        source.telescope,
+        source.RA,
+        source.DEC,
+        source.eventType,
+        source.urgencyLevel
       ];
       startData.push(formattedItem);
-    }
-    // --to get the neo table--
-
-    // --for the data from the simulator--
-    if (last  == null) {
-      formattedEvent = [];
-    } else {
-      formattedEvent = last;
-    }
-    var temp = last_events;
-    // --for the data from the simulator--
-
-    // Rendering the "dashboard.ejs" template with data for dynamic rendering.
-    res.render("pages/dashboard", { ans, formattedData: startData, eventData: formattedEvent, all_events: temp });
+    });
+    res.render('pages/table_search', { startData })
   } catch (error) {
-    console.error('Error retrieving formatted data:', error);
-    res.status(500).send('Internal Server Error');
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
+});
+
+app.get('/search_by_type', async (req, res) => {
+  type_event = req.query.type
+  start_date = req.query.start
+  end_date = req.query.end
+  searchResults = await starModel.quary_by_type(type_event, start_date, end_date);
+  const startData = [];
+  searchResults.forEach(result => {
+    const source = result._source;
+    const formattedItem = [
+      source.timestamp,
+      source.telescope,
+      source.RA,
+      source.DEC,
+      source.eventType,
+      source.urgencyLevel
+    ];
+    startData.push(formattedItem);
+  });
+  res.render('pages/table_search', { startData })
+});
+
+app.get('/search_by_telescope', async (req, res) => {
+  telescope = req.query.telescope
+  start_date = req.query.start
+  end_date = req.query.end
+  searchResults = await  starModel.quary_by_telescope(telescope, start_date, end_date);
+  const startData = [];
+  searchResults.forEach(result => {
+    const source = result._source;
+    const formattedItem = [
+      source.timestamp,
+      source.telescope,
+      source.RA,
+      source.DEC,
+      source.eventType,
+      source.urgencyLevel
+    ];
+    startData.push(formattedItem);
+  });
+  res.render('pages/table_search', { startData })
 });
 
 app.get('/graphs', async (req, res) => {
   try {
     const message = 'Hello from JavaScript server!';
     // to get the sun image
-    var imgSrc = await sendMessageToFastAPIImage(message);
+    var imgSrc = await model.sendMessageToFastAPIImage(message);
     // to get the rise, transit and set
-    var sunData = await sendMessageToFastAPIGraph(message);
-    var sunJson = JSON.parse(sunData);
+    var sunData = await model.sendMessageToFastAPIGraph(message);
+    var sunRise = await model.sendMessageToFastAPIRiseAndSet(message);
+    var sunTable = await model.sendMessageToFastAPIsunData(message);
+    list_data = JSON.parse(sunTable);
+    ans = list_data.map(item => [...item]);
+    var sunJson = JSON.parse(sunRise);
+    sunData = sunData.replace(/"/g, '');
     imgSrc = imgSrc.replace(/"/g, '');
     // Rendering the "analyze.ejs" template with data for dynamic rendering.
-    res.render('pages/analyze', { img: imgSrc , sun: sunJson });
+    res.render('pages/analyze', { img: imgSrc , sun: sunData, rise: sunJson, tableSun: ans });
   } catch (error) {
     console.error('Error retrieving event data:', error);
     res.status(500).send('Internal Server Error');
@@ -104,7 +134,7 @@ io.on('connection', socket => {
   socket.on('simulator', async data => {
     try {
       var parsedData = JSON.parse(data);
-      const star = await getStar(parsedData.location.RA, parsedData.location.DEC);
+      const star = await starModel.getStar(parsedData.location.RA, parsedData.location.DEC);
 
       const { MAG, 'Title HD': titleHD } = star;
 
@@ -142,9 +172,7 @@ io.on('connection', socket => {
       ];
 
       all_events.push(formattedAllEvent);
-
-      last_events.push(formattedAllEvent);
-      last = formattedEvent;
+      inventoryRouter.setEvent(formattedAllEvent, formattedEvent);
       io.emit('events', formattedEvent);
       io.emit('all_event', all_events);
 
@@ -248,72 +276,11 @@ io.on('connection', socket => {
   });
 });
 
-const sendMessageToFastAPI = async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/sun', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: null })
-    });
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } else {
-      console.error('Failed to send message to FastAPI:', response.status);
-    }
-  } catch (error) {
-    console.error('Error sending message to FastAPI:', error);
-  }
-};
-
-const sendMessageToFastAPIImage = async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/sun2', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: null })
-    });
-
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } else {
-      console.error('Failed to send message to FastAPI:', response.status);
-    }
-  } catch (error) {
-    console.error('Error sending message to FastAPI:', error);
-  }
-};
-
-const sendMessageToFastAPIGraph = async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/sun3', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ message: null })
-    });
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } else {
-      console.error('Failed to send message to FastAPI:', response.status);
-    }
-  } catch (error) {
-    console.error('Error sending message to FastAPI:', error);
-  }
-};
 
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-async function getStar(ra, dec) {
-  const star = await redis.findStarByRADec(ra, dec, redisClient)
-  return star;
-}
+
+
+
