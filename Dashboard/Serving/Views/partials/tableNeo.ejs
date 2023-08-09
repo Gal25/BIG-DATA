@@ -1,0 +1,30 @@
+<div class="col-lg-6 col-md-12">
+  <div class="card">
+    <div class="card-header card-header-primary">
+      <h4 class="card-title" style="font-family: Georgia, serif;">Close Approach Data</h4>
+      <p id="message"></p>
+      <p class="card-category">The following table shows close approaches to the Earth by near-Earth objects (NEOs) 
+        limited as selected in the “Table Settings” below. Data are not available prior to 1900 A.D. nor after 2200 A.D. Data are further limited to encounters with reasonably low uncertainty.</p>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-hover">
+        <thead class="text-primary">
+          <th>id</th>
+          <th>name</th>
+          <th>meters min</th>
+          <th>meters max</th>
+          <th>close approach date full</th>
+          <th>orbiting body</th>
+        </thead>
+        <tbody id="formattedDataTableBody">
+          <% for (let i = 0; i < formattedData.length; i++) { %>
+            <tr>
+              <% for (let j = 0; j < formattedData[i].length; j++) { %>
+                <td><%= formattedData[i][j] %></td>
+              <% } %>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div
