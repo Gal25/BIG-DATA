@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include("../partials/headers") %>
+    <!--ariel ws-->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+      crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      function setWs() {
+      }
+    </script>
+
+    <!--ariel ws -->
+    <style>
+      .container {
+        margin-top: 50px;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      input[type="text"] {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      input[type="datetime-local"] {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+        padding: 10px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color:  #54b0bc;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color:  #54b0bc;
+      }
+      
+      .title{
+        color: #FFFFFF;
+        display: block;
+        float: right;
+        font-family: audiowide-regular-webfont;
+        font-size: 50px;
+        font-weight: normal;
+        line-height: 60px;
+        margin: 0;
+        padding: 0;
+        left: -450px;
+        top: 30px;
+        position: relative;
+        text-align: center;
+        text-transform: uppercase;
+        width: 503px;
+        z-index: 60;
+      }
+
+      body {
+        background: url("../images/bg-home.jpg") no-repeat scroll center top #000000;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        width: auto;
+        z-index: 3;
+      }
+
+      .sidebar{
+	background-color: transparent;
+	color: #a3a3a3;
+      }
+
+      .text-white {
+  font-family: audiowide-regular-webfont;
+  font-size: 25px;
+  color: #f4f4f4;
+  margin-left: 60px;
+  text-align: center;
+      }
+
+
+      .material-icons-white {
+        font-family: audiowide-regular-webfont;
+        color: #f4f4f4;
+        font-size: 0px;
+
+      }
+
+      .nav-item {
+        background-color: transparent;
+        color: #a3a3a3;
+      }
+
+    </style>
+</head>
+
+<body class="" onload="setWs()">
+  <div class="wrapper ">
+    <%- include("../partials/sidebar",{ choise: 'table' }) %>
+      <div class="main-panel">
+        <h1 class="title">Search Options</h1>
+        <div class="content">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by bright star</strong></h1>
+                <input type="text" id="fullSearchInput_name" placeholder="Put star index">
+                <br>
+                <br>
+                <label for="startDateTime_name" style="color: #f4f4f4;">Date and start time:</label>
+                <input type="datetime-local" id="startDateTime_name">
+                <label for="endDateTime_name" style="color: #f4f4f4; margin-left: 30px;">Date and end time:</label>
+                <input type="datetime-local" id="endDateTime_name">
+                <br>
+                <button class="btn" onclick="performSearch_by_name()">Search</button>
+                <br>
+                <br>
+                <br>
+                <br>
+                <ul id="fullSearchResults"></ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by event type</h1></strong>
+                <input type="text" id="fullSearchInput_type" placeholder="put event type">
+                <br>
+                <br>
+                <label for="startDateTime_type" style="color: #f4f4f4;">Date and start time:</label>
+                <input type="datetime-local" id="startDateTime_type">
+                <label for="endDateTime_type" style="color: #f4f4f4; margin-left: 30px;">Date and end time:</label>
+                <input type="datetime-local" id="endDateTime_type">
+                <br>
+                <button class="btn" onclick="performSearch_by_type()">Search</button>
+                <br>
+                <br>
+                <br>
+                <br>
+                <ul id="fullSearchResults_type"></ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h1 style="font-size: 22px; color: #f4f4f4;"><strong>Search by telescope</h1></strong>
+                <input type="text" id="fullSearchInput_telescope" placeholder="put telescope name">
+                <br>
+                <br>
+                <label for="startDateTime_telescope" style="color: #f4f4f4;">Date and start time:</label>
+                <input type="datetime-local" id="startDateTime_telescope">
+                <label for="endDateTime_telescope" style="color: #f4f4f4; margin-left: 30px;">Date and end time:</label>
+                <input type="datetime-local" id="endDateTime_telescope">
+                <br>
+                <button class="btn" onclick="performSearch_by_telescope()">Search</button>
+                <br>
+                <br>
+                <br>
+                <br>
+                <ul id="fullSearchResults_telescope"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+  <%- include("../partials/dashcode") %>
+    <script>
+      function performSearch_by_name() {
+        const name = document.getElementById('fullSearchInput_name').value;
+        const startDateTime = formatDate(document.getElementById('startDateTime_name').value);
+        const endDateTime = formatDate(document.getElementById('endDateTime_name').value);
+        const queryString = `/search_by_name?name=${encodeURIComponent(name)}&start=${encodeURIComponent(startDateTime)}&end=${encodeURIComponent(endDateTime)}`;
+        // Perform the search or redirect to the desired URL
+        window.location.href = queryString;
+      }
+
+      function performSearch_by_type() {
+        const name = document.getElementById('fullSearchInput_type').value;
+        const startDateTime = formatDate(document.getElementById('startDateTime_type').value);
+        const endDateTime = formatDate(document.getElementById('endDateTime_type').value);
+
+        const queryString = `/search_by_type?type=${encodeURIComponent(name)}&start=${encodeURIComponent(startDateTime)}&end=${encodeURIComponent(endDateTime)}`;
+        // Perform the search or redirect to the desired URL
+        window.location.href = queryString;
+      }
+
+      function performSearch_by_telescope() {
+        const name = document.getElementById('fullSearchInput_telescope').value;
+        const startDateTime = formatDate(document.getElementById('startDateTime_telescope').value);
+        const endDateTime = formatDate(document.getElementById('endDateTime_telescope').value);
+
+        const queryString = `/search_by_telescope?telescope=${encodeURIComponent(name)}&start=${encodeURIComponent(startDateTime)}&end=${encodeURIComponent(endDateTime)}`;
+        // Perform the search or redirect to the desired URL
+        window.location.href = queryString;
+      }
+
+      function formatDate(dateTime) {
+        const parts = dateTime.split('T');
+        const date = parts[0];
+        const time = parts[1].slice(0, 5); // Extracting only the hour and minute
+        return `${date} ${time}`;
+      }
+    </script>
+</body>
+
+</html>
