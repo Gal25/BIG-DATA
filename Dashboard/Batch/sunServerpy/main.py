@@ -27,9 +27,23 @@ async def receive_message(message: Message):
     data = json.dumps(image_data)
     return data
 
-# Endpoint for '/sun3' to receive a message and return scraped sun data (rise, transit, set)
+# Endpoint for '/sun3' to receive a message and return scraped the sun position
 @app.post("/sun3")
+async def receive_message(message: Message):
+    print("Received message:", message.message)
+    sun_data = scrapSun.bringImage2()
+    return sun_data
+
+# Endpoint for '/sun3' to receive a message and return scraped sun data (rise, set)
+@app.post("/sun4")
 async def receive_message(message: Message):
     print("Received message:", message.message)
     sun_data = scrapSun.rise_set()
     return sun_data
+
+@app.post("/sun5")
+async def receive_message(message: Message):
+    print("Received message:", message.message)
+    sun_data = scrapSun.sunData()
+    data = json.dumps(sun_data)
+    return data
