@@ -42,7 +42,7 @@ There are 3 search options
 
 # **Analyze**
 <img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/צילום מסך 2023-08-09 180416.png">
-<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/graph2.jpeg">
+<img width="700" src="https://github.com/einav242/BIG-DATA/blob/main/images/צילום מסך2.png">
 o Distribution of the types of events in the last week (cut by urgency 1-5)
 
 o Graph of the distribution of asteroids that passed near Earth in the last month (by size)
